@@ -1,4 +1,4 @@
-import { Express } from "express";
+            import { Express } from "express";
 import { CreateNewtransactionController } from "./controllers/transactions/createTransaction";
 import { GetUserController } from "./controllers/users/getUserById";
 import { GetTransactionController } from "./controllers/transactions/getTransactionById";
@@ -11,6 +11,8 @@ import { DeleteUserController } from "./controllers/users/deleteUser";
 import { BalanceTransactionController } from "./controllers/transactions/GetbalanceTransaction";
 import { ValidateUserMiddleware } from "./middlewares/validateUser";
 import { validateTransactionMiddlewares } from "./middlewares/validateTransaction";
+import { validateTransactionStatusMiddlewares } from "./middlewares/validate-transaction-status-middlewares";
+import { ChangeArchivedStatusController } from "./controllers/transactions/changeArchivedStatusController";
 
 export default (app: Express) => {
   app.post("/user", new CreateNewuser().createUser);
@@ -59,5 +61,13 @@ export default (app: Express) => {
     "/user/:userId/transactions",
     new ValidateUserMiddleware().validateUser,
     new BalanceTransactionController().GetbalanceTransaction
+  );
+
+  app.put(
+    "/user/:userId/transactions/:id/archived",
+    new ValidateUserMiddleware().validateUser,
+    new validateTransactionMiddlewares().validateTransction,
+    new validateTransactionStatusMiddlewares().validate,
+    new ChangeArchivedStatusController().change
   );
 };

@@ -5,12 +5,14 @@ export class Transaction {
   private _title: string;
   private _value: number;
   private _type: "income" | "outcome";
+  private _archived: boolean
 
   constructor(title: string, value: number, type: "income" | "outcome") {
     this._id = crypto.randomUUID();
     this._title = title;
     this._value = value;
     this._type = type;
+    this._archived = false;
   }
 
   get id() {
@@ -29,6 +31,10 @@ export class Transaction {
     return this._type;
   }
 
+  get archived() {
+    return this._archived;
+  }
+
   transactionUpdate(title: string, value: number, type: "income" | "outcome") {
     this._title = title;
     this._value = value;
@@ -42,5 +48,9 @@ export class Transaction {
       value: this._value,
       type: this._type,
     };
+  }
+
+  alterarStatusArquivo(status: boolean) {
+    this._archived = status;
   }
 }
