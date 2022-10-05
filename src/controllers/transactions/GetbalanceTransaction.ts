@@ -4,10 +4,30 @@ import { usersApp } from "../../db/users";
 export class BalanceTransactionController {
   GetbalanceTransaction(request: Request, response: Response) {
     const { userId } = request.params;
+    const { archived, type, title } = request.query;
 
     const user = usersApp.find((user) => userId === user.id);
 
-    const transactions = user?.transactions;
+    const transactions = user?.transactions.filter((transaction) => {
+      let filterArchived = true;
+      let filterType = true;
+      let filterTitle = true;
+
+      if (title) {
+        filterTitle = transaction.title
+          .toLowerCase()
+          .includes(title.toString().toLowerCase());
+      }
+      if (type) {
+        filterType =
+          transaction.type.toLowerCase() === type.toString().toLowerCase();
+      }
+      if (archived) {
+        filterArchived =
+          transaction.archived === (archived === "true" ? true : false);
+      }
+      return filterTitle && filterType && filterArchived;
+    });
 
     const balance = transactions?.reduce(
       (acc, { type }, index, vetor) => {
