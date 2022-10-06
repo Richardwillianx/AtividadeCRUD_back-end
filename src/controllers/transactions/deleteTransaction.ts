@@ -7,7 +7,7 @@ export class DeleteTransactionController {
 
     const user = usersApp.find((user) => userId === user.id);
 
-    const indexUser = user?.transactions.findIndex((trans) => trans.id === id);
+    const indexUser = user?.transactions.findIndex((trans) => trans.id === id) as number;
 
     user?.transactions.splice(indexUser, 1);
 
